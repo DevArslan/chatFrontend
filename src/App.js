@@ -1,6 +1,6 @@
 import React,  { Component } from 'react';
 import logo from './logo.svg';
-import io from 'socket.io-client'
+
 import './App.css';
 import {
   Route,
@@ -9,11 +9,8 @@ import {
   withRouter
 } from "react-router-dom"
 import Authorization from './components/authorization/Authorization';
+import Rooms from './components/rooms/Rooms';
 import { render } from 'react-dom';
-
-
-const BASE_URL = 'http://localhost:5050'
-const socket = io(BASE_URL)
 
 
 class App extends Component {
@@ -23,6 +20,7 @@ class App extends Component {
       <div className="App">
         <Switch>
           <Route history={history} path='/auth' component={Authorization} />
+          <Route history={history} path='/rooms/:id' component={Rooms} />
           <Redirect from='/' to='/auth' />
         </Switch>
       </div>
