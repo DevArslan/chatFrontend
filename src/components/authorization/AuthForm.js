@@ -6,6 +6,7 @@ import { SnackbarContent } from '@material-ui/core';
 import axios from 'axios'
 import socket from '../../socket'
 import BASE_URL from '../../config'
+
 const styles = {
     snackbar: {
         backgroundColor: '#f44336',
@@ -25,7 +26,12 @@ const styles = {
     }
 }
 
-export default function AuthForm() {
+export default function AuthForm(props) {
+    let rooms  = []
+    
+    axios.get(BASE_URL+'/rooms').then((res)=>{
+        rooms = res.data
+    })
 
     const [userName, setUserName] = React.useState('')
     const [open, setOpen] = React.useState(false);
@@ -45,10 +51,10 @@ export default function AuthForm() {
         if (!userName) {
             snackOpen()
         }
-        console.log(BASE_URL)
+        console.log(rooms)
         axios.post(BASE_URL+'/rooms',{userName})
     }
-
+ 
     return (
         <div>
             <form action="" className="authForm" style={styles.authForm}>
