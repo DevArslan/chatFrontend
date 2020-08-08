@@ -15,6 +15,7 @@ import { render } from 'react-dom';
 
 class App extends Component {
   render() {
+    
     const { history } = this.props
     return (
       <div className="App">

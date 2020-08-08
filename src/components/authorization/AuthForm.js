@@ -6,6 +6,11 @@ import { SnackbarContent } from '@material-ui/core';
 import axios from 'axios'
 import socket from '../../socket'
 import BASE_URL from '../../config'
+import Rooms from '../rooms/Rooms'
+import AuthorizationService from '../../shared/AuthorizationService'
+import RoomsService from "../../shared/RoomsService";
+import { useHistory } from "react-router-dom";
+
 
 const styles = {
     snackbar: {
@@ -27,14 +32,22 @@ const styles = {
 }
 
 export default function AuthForm(props) {
-    let rooms  = []
-    
-    axios.get(BASE_URL+'/rooms').then((res)=>{
-        rooms = res.data
-    })
+    // console.log(props.rooms)
+    // const rooms = props.rooms
 
+    const history = useHistory()
+    let [rooms, setRooms] = React.useState([])
     const [userName, setUserName] = React.useState('')
     const [open, setOpen] = React.useState(false);
+
+    RoomsService.rooms.subscribe((data) => {
+        setRooms(data)
+        console.log(data)
+    })
+
+
+
+
 
     const snackOpen = () => {
         setOpen(true);
@@ -47,14 +60,25 @@ export default function AuthForm(props) {
         setOpen(false);
     };
 
-    const auth = () => {
+    function auth() {
+
         if (!userName) {
             snackOpen()
+        } else {
+            AuthorizationService.username.next(userName)
+            console.log(rooms)
+            const roomsIds = Object.keys(rooms).sort()
+            console.log(roomsIds)
+            if (roomsIds.length == 0) {
+                history.push('/rooms/1')
+            } else {
+                console.log(Number(roomsIds[roomsIds.length-1]))
+                history.push(`/rooms/${Number(roomsIds[roomsIds.length-1]) + 1}`)
+            }
+
         }
-        console.log(rooms)
-        axios.post(BASE_URL+'/rooms',{userName})
     }
- 
+
     return (
         <div>
             <form action="" className="authForm" style={styles.authForm}>
@@ -65,7 +89,7 @@ export default function AuthForm(props) {
             </form>
             <Snackbar
 
-                
+
                 anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
                 open={open}
                 autoHideDuration={3000}
