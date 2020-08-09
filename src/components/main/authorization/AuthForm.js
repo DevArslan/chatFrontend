@@ -4,11 +4,11 @@ import Button from '@material-ui/core/Button';
 import Snackbar from '@material-ui/core/Snackbar';
 import { SnackbarContent } from '@material-ui/core';
 import axios from 'axios'
-import socket from '../../socket'
-import BASE_URL from '../../config'
+import socket from '../../../socket'
+import BASE_URL from '../../../config'
 import Rooms from '../rooms/Rooms'
-import AuthorizationService from '../../shared/AuthorizationService'
-import RoomsService from "../../shared/RoomsService";
+import AuthorizationService from '../shared/AuthorizationService'
+import RoomsService from "../shared/RoomsService";
 import { useHistory } from "react-router-dom";
 
 
@@ -40,9 +40,9 @@ export default function AuthForm(props) {
     const [userName, setUserName] = React.useState('')
     const [open, setOpen] = React.useState(false);
 
-    RoomsService.rooms.subscribe((data) => {
+    let subscription = RoomsService.rooms.subscribe((data) => {
         setRooms(data)
-        console.log(data)
+        subscription.unsubscribe()
     })
 
 
@@ -65,16 +65,16 @@ export default function AuthForm(props) {
         if (!userName) {
             snackOpen()
         } else {
-            AuthorizationService.username.next(userName)
             console.log(rooms)
             const roomsIds = Object.keys(rooms).sort()
             console.log(roomsIds)
+            
             if (roomsIds.length == 0) {
-                history.push('/rooms/1')
+                history.push('rooms/1')
             } else {
-                console.log(Number(roomsIds[roomsIds.length-1]))
-                history.push(`/rooms/${Number(roomsIds[roomsIds.length-1]) + 1}`)
+                history.push(`rooms/${Number(roomsIds[roomsIds.length-1]) + 1}`)
             }
+            AuthorizationService.username.next(userName)
 
         }
     }
