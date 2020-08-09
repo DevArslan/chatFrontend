@@ -25,11 +25,14 @@ let username = ''
 export default function Main(props) {
     let { path, url } = useRouteMatch();
     const { history } = props
-
+    if(sessionStorage.getItem('username')){
+        username = sessionStorage.getItem('username')
+    }
     let subscription = AuthorizationService.username.subscribe((data) => {
         username = data
         subscription.unsubscribe()
     })
+    
 
     return (
         <div className='wrapper'>

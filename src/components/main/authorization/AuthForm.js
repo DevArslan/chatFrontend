@@ -65,15 +65,15 @@ export default function AuthForm(props) {
         if (!userName) {
             snackOpen()
         } else {
-            console.log(rooms)
+
             const roomsIds = Object.keys(rooms).sort()
-            console.log(roomsIds)
             
             if (roomsIds.length == 0) {
                 history.push('rooms/1')
             } else {
                 history.push(`rooms/${Number(roomsIds[roomsIds.length-1]) + 1}`)
             }
+            sessionStorage.setItem('username', userName)
             AuthorizationService.username.next(userName)
 
         }

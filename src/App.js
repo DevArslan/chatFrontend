@@ -22,7 +22,6 @@ class App extends Component {
       <div className="App">
         <Switch>
           <Route history={history} path='/main' component={Main}>
-            
           </Route>
 
           {/* <Redirect from='/' to='/auth' /> */}
