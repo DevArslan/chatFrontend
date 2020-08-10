@@ -69,6 +69,7 @@ const styles = {
         margin: '0.8rem auto',
     },
     messageText: {
+        wordBreak: 'break-word',
         textAlign: 'left',
         padding: '0.5rem',
         borderRadius: '5px',
@@ -112,7 +113,7 @@ export default function Rooms(props) {
         socket.on('MESSAGES', (message) => {
 
             dispatch({
-                type: 'MESSAGES',
+                type: 'NEW_MESSAGE',
                 payload: message,
             })
         })
@@ -134,7 +135,7 @@ export default function Rooms(props) {
         socket.emit('POST_MESSAGE', messageObject)
 
         dispatch({
-            type: 'MESSAGES',
+            type: 'NEW_MESSAGE',
             payload: messageObject,
         })
 
@@ -151,6 +152,7 @@ export default function Rooms(props) {
 
         axios.get(BASE_URL + '/rooms/' + roomId)
             .then((data) => {
+                socket.emit('JOIN', roomObject)
                 console.log(data)
                 if (data.data != 'New room') {
                     const users = data.data.users
@@ -164,6 +166,13 @@ export default function Rooms(props) {
                         type: 'USERS',
                         payload: usernames,
                     })
+                    dispatch({
+                        type: 'MESSAGES',
+                        payload: data.data.messages,
+                    })
+                    console.log(data.data.messages)
+                    console.log(state.messages)
+                    // state.messages = data.data.messages
                 } else {
                     let users = []
                     users.push(roomObject.username)
@@ -173,7 +182,7 @@ export default function Rooms(props) {
                     })
                 }
 
-                socket.emit('JOIN', roomObject)
+                
             })
     }
 

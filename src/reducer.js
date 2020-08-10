@@ -12,10 +12,15 @@ export default (state, action) => {
                 joined: action.payload
             }
         case 'MESSAGES':
-            console.log(action.payload)
+            console.log('MESSAGES')
             return {
                 ...state,
-                messages: [...state.messages , action.payload],
+                messages: action.payload,
+            }
+        case 'NEW_MESSAGE':
+            return {
+                ...state,
+                messages: [...state.messages, action.payload],
             }
         default:
             break;
