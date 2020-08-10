@@ -71,11 +71,10 @@ export default function AuthForm(props) {
             if (roomsIds.length == 0) {
                 history.push('rooms/1')
             } else {
+                console.log(roomsIds[roomsIds.length-1])
                 history.push(`rooms/${Number(roomsIds[roomsIds.length-1]) + 1}`)
             }
             sessionStorage.setItem('username', userName)
-            AuthorizationService.username.next(userName)
-
         }
     }
 

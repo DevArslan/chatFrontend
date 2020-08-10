@@ -21,11 +21,12 @@ const styles = {
 let username = ''
 
 
-
-
 export default function Main(props) {
     let { path, url } = useRouteMatch();
     const { history } = props
+
+
+
     if(sessionStorage.getItem('username')){
         username = sessionStorage.getItem('username')
     }
@@ -35,6 +36,7 @@ export default function Main(props) {
             <Switch>
                 <Route history={history} path={`${path}/auth/`} render={(props) => (<Authorization {...props} />)} />
                 <Route history={history} path={`${path}/rooms/:id`}  render={(props) => (<Rooms {...props}  username = {username} />)} />
+                <Redirect from={`${path}/**`} to={`${path}/auth`} />
             </Switch>
 
         </div>

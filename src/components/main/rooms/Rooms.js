@@ -6,6 +6,8 @@ import RoomsService from '../shared/RoomsService'
 import reducer from '../../../reducer'
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import { useHistory } from "react-router-dom";
+import AuthorizationService from '../shared/AuthorizationService'
 const styles = {
     wrapper: {
         overflow: 'hidden',
@@ -83,14 +85,22 @@ const styles = {
 
 }
 
-
 export default function Rooms(props) {
+    const history = useHistory()
+
+
+    if (!sessionStorage.getItem('username')) {
+        history.push('/auth')
+    }
+
     const [state, dispatch] = React.useReducer(reducer, {
         users: [],
         joined: false,
         messages: [],
     })
     const [message, setMessage] = React.useState('')
+
+    const messageScroll = React.useRef(null)
 
     React.useEffect(() => {
         socket.on('USERS', (data) => {
@@ -106,12 +116,15 @@ export default function Rooms(props) {
                 payload: message,
             })
         })
-
     }, [])
 
-    function sendMessage() {
+    React.useEffect(() => {
+        messageScroll.current.scrollTo(0, 99999);
+    }, [state.messages])
 
-        const messageObject = {}
+    function sendMessage() {
+        if(message){
+            const messageObject = {}
 
         messageObject.id = props.match.params.id
         messageObject.username = props.username
@@ -119,6 +132,14 @@ export default function Rooms(props) {
         messageObject.date = `${new Date().getHours()}:${new Date().getMinutes()}:${new Date().getSeconds()}`
 
         socket.emit('POST_MESSAGE', messageObject)
+
+        dispatch({
+            type: 'MESSAGES',
+            payload: messageObject,
+        })
+
+        setMessage('')
+        }
     }
 
     function joinInRoom() {
@@ -180,15 +201,10 @@ export default function Rooms(props) {
             messages.map((message, index) => {
                 return (
                     <div className="message" key={index} style={styles.message}>
-
-                        {/* <TextField className="message-text " id="outlined-basic" variant="outlined" label={message.username} value={message.message} style={styles.messageText} /> */}
                         <div className="message-text " style={styles.messageText}>{message.message}</div>
                         <div className="message-info" style={styles.messageInfo}>
                             <span style={styles.messageInfoUserName}>{message.username}</span>, {message.date}
                         </div>
-                        {/* <p className="message-text">{message.message}</p>
-                        <p className="message-author">{message.username}</p> */}
-                        {/* <p className="message-date">{message.date}</p> */}
                     </div>
                 )
             })
@@ -204,7 +220,7 @@ export default function Rooms(props) {
                 </ul>
             </div>
             <div className="chat">
-                <div className="chat-messages" style={styles.chatMessages}>
+                <div className="chat-messages" style={styles.chatMessages} ref={messageScroll}>
                     {messagesList(state.messages)}
                 </div>
                 <div className="chat-form" style={styles.chatForm}>

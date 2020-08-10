@@ -15,6 +15,9 @@ import { render } from 'react-dom';
 
 
 class App extends Component {
+
+
+
   render() {
 
     const { history } = this.props
@@ -24,7 +27,7 @@ class App extends Component {
           <Route history={history} path='/main' component={Main}>
           </Route>
 
-          {/* <Redirect from='/' to='/auth' /> */}
+          <Redirect from='**' to='main/auth' />
         </Switch>
       </div>
     );
