@@ -11,6 +11,12 @@ export default (state, action) => {
                 ...state,
                 joined: action.payload
             }
+        case 'MESSAGES':
+            console.log(action.payload)
+            return {
+                ...state,
+                messages: [...state.messages , action.payload],
+            }
         default:
             break;
     }
