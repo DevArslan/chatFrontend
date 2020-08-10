@@ -60,7 +60,7 @@ export default function AuthForm(props) {
         setOpen(false);
     };
 
-    function auth() {
+    function auth(event) {
 
         if (!userName) {
             snackOpen()
@@ -76,13 +76,14 @@ export default function AuthForm(props) {
             }
             sessionStorage.setItem('username', userName)
         }
+        event.preventDefault();
     }
 
     return (
         <div>
-            <form action="" className="authForm" style={styles.authForm}>
+            <form onSubmit={auth} className="authForm" style={styles.authForm} id="form"> 
                 <TextField className="inputLogin" id="standard-basic" label="Имя пользователя" value={userName} onChange={(event) => setUserName(event.target.value)} />
-                <Button variant="outlined" color="secondary" className="authButton" style={styles.authButton} onClick={auth}>
+                <Button type="submit" form="form" variant="outlined" color="secondary" className="authButton" style={styles.authButton} >
                     Войти
                 </Button>
             </form>

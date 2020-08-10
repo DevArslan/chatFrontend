@@ -1,3 +1,3 @@
-const BASE_URL = 'http://localhost:5050'
+const BASE_URL = 'https://lit-tor-50537.herokuapp.com/'
 
 export default BASE_URL;
